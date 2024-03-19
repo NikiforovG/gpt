@@ -1,0 +1,13 @@
+# .flake8
+[flake8]
+select = B,B9,BLK,C,E,F,I,S,W
+max-complexity = 20
+import-order-style = smarkets
+max-line-length = 120
+# W291 - for more attractive view of multiline SQL scripts
+extend-ignore = E203,E501,W291
+application_import_names = src
+extend-immutable-calls =
+    fastapi.Header,
+    fastapi.Depends,
+    fastapi.params.Depends,

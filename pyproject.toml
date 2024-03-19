@@ -1,0 +1,47 @@
+[tool.poetry]
+name = "gpt"
+version = "0.1.0"
+description = ""
+authors = ["Gleb Nikiforov <nikiforovg1996@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.12.0"
+bandit = "^1.7.4"
+flake8 = "^6.0"
+flake8-bandit = "^4.1"
+flake8-black = "^0.3.2"
+flake8-bugbear = "^23.2"
+flake8-import-order = "^0.18.1"
+flake8-polyfill = "^1.0.2"
+mypy = "^1.0"
+mypy-extensions = "^1.0"
+pylint = "^2.16.2"
+pre-commit = "^3.1"
+ruff = "^0.1.11"
+
+[tool.black]
+skip-string-normalization = true
+line_length = 120
+
+[tool.ruff]
+select = ["E", "F", "B", "N", "S", "ICN"]
+# Exclude a variety of commonly ignored directories.
+exclude = [
+    ".git",
+    ".mypy_cache",
+    ".ruff_cache",
+    ".idea"
+]
+# Same as Black.
+line-length = 120
+# Assume Python 3.11.
+target-version = "py311"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
