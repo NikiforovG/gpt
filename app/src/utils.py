@@ -1,6 +1,14 @@
+import requests
 import torch
 
 from .data import Data
+
+
+def get_tinyshakespeare_dataset() -> str:
+    url = 'https://raw.githubusercontent.com/karpathy/char-rnn/master/data/tinyshakespeare/input.txt'
+    response = requests.get(url, timeout=30)
+    response.raise_for_status()
+    return response.text
 
 
 @torch.no_grad()
@@ -18,3 +26,7 @@ def estimate_loss(
         out[split] = losses.mean()
     model.train()
     return out
+
+
+def count_parameters(model: torch.nn.Module) -> int:
+    return sum(p.numel() for p in model.parameters() if p.requires_grad)

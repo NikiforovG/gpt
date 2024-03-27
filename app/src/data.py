@@ -21,7 +21,7 @@ class Data:
     def __init__(self, data: list[int], train_test_split: float = 0.8) -> None:
         data_tensor = torch.tensor(data, dtype=torch.long)
 
-        n = int(train_test_split * len(data))  # first 90% will be train, rest val
+        n = int(train_test_split * len(data))
         self.train_data = data_tensor[:n]
         self.val_data = data_tensor[n:]
 
