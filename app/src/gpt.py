@@ -22,7 +22,7 @@ class AttentionHead(nn.Module):
         attn_scores = queries @ rearrange(keys, 'b t h -> b h t') / (self.head_size**0.5)
         attn_scores = torch.tril(attn_scores)
         attn_scores = attn_scores.masked_fill(attn_scores == 0, float('-inf'))
-        attn_scores = F.softmax(attn_scores, dim=1)
+        attn_scores = F.softmax(attn_scores, dim=-1)
         attn_scores = self.dropout(attn_scores)
         out: torch.Tensor = attn_scores @ values
         return out
