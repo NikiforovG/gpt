@@ -29,6 +29,7 @@ def process_training(data: Data, model: GPTModel, optimizer: torch.optim.Optimiz
         _, loss = model(xb, yb)
         optimizer.zero_grad(set_to_none=True)
         loss.backward()
+        torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1)
         optimizer.step()
         if steps % eval_interval == 0:
             losses = estimate_loss(
