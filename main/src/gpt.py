@@ -103,7 +103,7 @@ class GPTModel(nn.Module):
         self, idx: torch.Tensor, targets: torch.Tensor | None = None
     ) -> tuple[torch.Tensor, torch.Tensor | None]:
         tok_emb = self.token_embedding_table(idx)
-        pos_emb = self.position_embedding_table(torch.arange(tok_emb.shape[1]))
+        pos_emb = self.position_embedding_table(torch.arange(tok_emb.shape[1], device=tok_emb.device))
         x = tok_emb + pos_emb
         x = self.transformer(x)
         x = self.ln(x)
@@ -115,10 +115,9 @@ class GPTModel(nn.Module):
         return logits, loss
 
     def generate(self, start_tokens: torch.Tensor, max_new_tokens: int) -> torch.Tensor:
-        tokens = start_tokens
         for _ in range(max_new_tokens):
-            logits, _ = self.forward(tokens[:, -self.block_size :])
+            logits, _ = self.forward(start_tokens[:, -self.block_size :])
             logits = logits[:, -1, :]
             predicted_token = torch.multinomial(F.softmax(logits, dim=-1), num_samples=1)
-            tokens = torch.cat((tokens, predicted_token), dim=1)
-        return tokens
+            start_tokens = torch.cat((start_tokens, predicted_token), dim=1)
+        return start_tokens

@@ -66,7 +66,7 @@ def process_training(
             )
 
     training_time = round(time() - timer)
-    logger.info("Totla training time %d sec", training_time)
+    logger.info("Total training time %d sec", training_time)
     result_training_state = TrainingState(
         model_config=training_state.model_config,
         model=training_state.model,
@@ -134,9 +134,9 @@ if __name__ == '__main__':
     save_training_state(weights_folder, training_state)
 
     sample_generation = vocab.decode(
-        training_state.model.generate(start_tokens=torch.zeros((1, 1), dtype=torch.long), max_new_tokens=500)[
-            0
-        ].tolist()
+        training_state.model.generate(
+            start_tokens=torch.zeros((1, 1), dtype=torch.long, device=device), max_new_tokens=500
+        )[0].tolist()
     )
     with open(
         os.path.join(weights_folder, f'gpt_{training_state.training_steps}_sample_output.txt'), 'w', encoding='utf-8'
