@@ -37,22 +37,21 @@ def process_training(
     device: torch.device,
 ) -> TrainingState:
     timer = time()
-    model = training_state.model
     steps = 0
     for steps in range(training_state.training_steps + 1, training_state.training_steps + 1 + config.max_iters):
         xb, yb = data.get_batch(
             'train', block_size=training_state.model_config.block_size, batch_size=config.batch_size
         )
         xb, yb = xb.to(device), yb.to(device)
-        _, loss = model(xb, yb)
+        _, loss = training_state.model(xb, yb)
         optimizer.zero_grad(set_to_none=True)
         loss.backward()
-        torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1)
+        torch.nn.utils.clip_grad_norm_(training_state.model.parameters(), max_norm=1)
         optimizer.step()
         if steps % config.eval_interval == 0:
             losses = estimate_loss(
                 eval_iters=config.eval_iters,
-                model=model,
+                model=training_state.model,
                 data=data,
                 block_size=training_state.model_config.block_size,
                 batch_size=config.batch_size,
@@ -70,7 +69,7 @@ def process_training(
     logger.info("Totla training time %d sec", training_time)
     result_training_state = TrainingState(
         model_config=training_state.model_config,
-        model=model,
+        model=training_state.model,
         optimizer_state_dict=optimizer.state_dict(),
         training_time=training_time,
         training_steps=steps,
