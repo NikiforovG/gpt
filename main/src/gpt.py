@@ -114,6 +114,7 @@ class GPTModel(nn.Module):
             loss = F.cross_entropy(rearrange(logits, 'b t c -> (b t) c'), rearrange(targets, 'b t -> (b t)'))
         return logits, loss
 
+    @torch.no_grad()
     def generate(self, start_tokens: torch.Tensor, max_new_tokens: int) -> torch.Tensor:
         for _ in range(max_new_tokens):
             logits, _ = self.forward(start_tokens[:, -self.block_size :])
